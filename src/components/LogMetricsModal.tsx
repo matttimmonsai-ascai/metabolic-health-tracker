@@ -15,6 +15,8 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
     fasting_insulin: '',
     fasting_glucose: '',
     waist_circumference: '',
+    abdomen: '',
+    hips: '',
     blood_pressure_sys: '',
     blood_pressure_dia: '',
     steps: '',
@@ -31,23 +33,22 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
     const supabase = createClient();
     
     try {
-      // 1. Get the securely logged-in user
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError || !user) throw new Error("Could not find logged in user. Please log in again.");
 
-      // 2. Automatically Calculate HOMA-IR (Glucose * Insulin / 405)
       let homa_ir = null;
       if (formData.fasting_glucose && formData.fasting_insulin) {
         homa_ir = (Number(formData.fasting_glucose) * Number(formData.fasting_insulin)) / 405;
       }
 
-      // 3. Save to Supabase
       const { error } = await supabase.from('health_metrics').insert({
         user_id: user.id,
         fasting_insulin: formData.fasting_insulin ? Number(formData.fasting_insulin) : null,
         fasting_glucose: formData.fasting_glucose ? Number(formData.fasting_glucose) : null,
         homa_ir: homa_ir ? Number(homa_ir.toFixed(2)) : null,
         waist_circumference: formData.waist_circumference ? Number(formData.waist_circumference) : null,
+        abdomen: formData.abdomen ? Number(formData.abdomen) : null,
+        hips: formData.hips ? Number(formData.hips) : null,
         blood_pressure_sys: formData.blood_pressure_sys ? Number(formData.blood_pressure_sys) : null,
         blood_pressure_dia: formData.blood_pressure_dia ? Number(formData.blood_pressure_dia) : null,
         steps: formData.steps ? Number(formData.steps) : null,
@@ -59,8 +60,6 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
       
       alert("Metrics saved successfully!");
       onClose();
-      
-      // In a real app, we would refresh the data on the page here
       window.location.reload(); 
       
     } catch (error: any) {
@@ -87,7 +86,6 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           
-          {/* Clinical Section */}
           <div>
             <h3 className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">Clinical Markers</h3>
             <div className="grid grid-cols-2 gap-4">
@@ -107,26 +105,38 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
             )}
           </div>
 
-          {/* Vitals Section */}
           <div>
-            <h3 className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">Vitals</h3>
+            <h3 className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">Body Measurements (in)</h3>
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">Waist (in)</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Waist</label>
                 <input type="number" step="0.1" name="waist_circumference" value={formData.waist_circumference} onChange={handleChange} className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">BP Systolic</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Abdomen</label>
+                <input type="number" step="0.1" name="abdomen" value={formData.abdomen} onChange={handleChange} className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Hips</label>
+                <input type="number" step="0.1" name="hips" value={formData.hips} onChange={handleChange} className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">Blood Pressure</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Systolic (Top)</label>
                 <input type="number" name="blood_pressure_sys" value={formData.blood_pressure_sys} onChange={handleChange} className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="120" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">BP Diastolic</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">Diastolic (Bottom)</label>
                 <input type="number" name="blood_pressure_dia" value={formData.blood_pressure_dia} onChange={handleChange} className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="80" />
               </div>
             </div>
           </div>
 
-          {/* Activity Section */}
           <div>
             <h3 className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">Daily Activity</h3>
             <div className="grid grid-cols-3 gap-4">
@@ -154,7 +164,6 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
               {loading ? <Loader2 className="animate-spin" /> : "Save Metrics to Database"}
             </button>
           </div>
-
         </form>
       </div>
     </div>
