@@ -63,7 +63,9 @@ export default function MyLogs() {
                   <th className="py-4 px-6">Fasting Insulin</th>
                   <th className="py-4 px-6">Fasting Glucose</th>
                   <th className="py-4 px-6 font-bold text-blue-600">HOMA-IR</th>
-                  <th className="py-4 px-6">Waist (in)</th>
+                  <th className="py-4 px-6">Waist</th>
+                  <th className="py-4 px-6">Abdomen</th>
+                  <th className="py-4 px-6">Hips</th>
                   <th className="py-4 px-6">Blood Pressure</th>
                   <th className="py-4 px-6">Steps</th>
                 </tr>
@@ -71,7 +73,7 @@ export default function MyLogs() {
               <tbody>
                 {logs.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="py-8 text-center text-slate-500">No logs recorded yet.</td>
+                    <td colSpan={9} className="py-8 text-center text-slate-500">No logs recorded yet.</td>
                   </tr>
                 )}
                 {logs.map((log) => (
@@ -92,6 +94,8 @@ export default function MyLogs() {
                       </span>
                     </td>
                     <td className="py-4 px-6 text-slate-600">{log.waist_circumference ? `${log.waist_circumference}"` : '--'}</td>
+                    <td className="py-4 px-6 text-slate-600">{log.abdomen ? `${log.abdomen}"` : '--'}</td>
+                    <td className="py-4 px-6 text-slate-600">{log.hips ? `${log.hips}"` : '--'}</td>
                     <td className="py-4 px-6 text-slate-600">
                       {log.blood_pressure_sys && log.blood_pressure_dia ? `${log.blood_pressure_sys}/${log.blood_pressure_dia}` : '--'}
                     </td>

@@ -33,14 +33,17 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
     const supabase = createClient();
     
     try {
+      // 1. Get the securely logged-in user
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError || !user) throw new Error("Could not find logged in user. Please log in again.");
 
+      // 2. Automatically Calculate HOMA-IR (Glucose * Insulin / 405)
       let homa_ir = null;
       if (formData.fasting_glucose && formData.fasting_insulin) {
         homa_ir = (Number(formData.fasting_glucose) * Number(formData.fasting_insulin)) / 405;
       }
 
+      // 3. Save to Supabase
       const { error } = await supabase.from('health_metrics').insert({
         user_id: user.id,
         fasting_insulin: formData.fasting_insulin ? Number(formData.fasting_insulin) : null,
@@ -60,6 +63,8 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
       
       alert("Metrics saved successfully!");
       onClose();
+      
+      // In a real app, we would refresh the data on the page here
       window.location.reload(); 
       
     } catch (error: any) {
@@ -86,6 +91,7 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
 
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
           
+          {/* Clinical Section */}
           <div>
             <h3 className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">Clinical Markers</h3>
             <div className="grid grid-cols-2 gap-4">
@@ -105,6 +111,7 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
             )}
           </div>
 
+          {/* Body Measurements Section */}
           <div>
             <h3 className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">Body Measurements (in)</h3>
             <div className="grid grid-cols-3 gap-4">
@@ -123,6 +130,7 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
             </div>
           </div>
 
+          {/* Blood Pressure Section */}
           <div>
             <h3 className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">Blood Pressure</h3>
             <div className="grid grid-cols-2 gap-4">
@@ -137,6 +145,7 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
             </div>
           </div>
 
+          {/* Activity Section */}
           <div>
             <h3 className="text-sm font-semibold text-blue-600 uppercase tracking-wider mb-3">Daily Activity</h3>
             <div className="grid grid-cols-3 gap-4">
@@ -164,6 +173,7 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
               {loading ? <Loader2 className="animate-spin" /> : "Save Metrics to Database"}
             </button>
           </div>
+
         </form>
       </div>
     </div>

@@ -10,8 +10,7 @@ export default function Sidebar({ role = 'member' }: { role?: 'member' | 'admin'
 
   const memberLinks = [
     { name: 'Dashboard', href: '/member', icon: LayoutDashboard },
-    { name: 'My Logs', href: '/member/logs', icon: Activity },
-    { name: 'Settings', href: '/member/settings', icon: Settings }
+    { name: 'My Logs', href: '/member/logs', icon: Activity }
   ];
 
   const adminLinks = [
