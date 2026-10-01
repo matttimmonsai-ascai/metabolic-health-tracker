@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '@/components/Sidebar';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { ArrowDown, Droplet, Activity, Heart, ArrowUp, Footprints, Timer, Flame, Loader2 } from 'lucide-react';
+import { Droplet, Activity, Heart, Footprints, Timer, Flame, Loader2, Scale } from 'lucide-react';
 import LogMetricsModal from '@/components/LogMetricsModal';
 import { createClient } from '@/utils/supabase/client';
 
@@ -18,32 +18,31 @@ export default function MemberDashboard() {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (user) {
-        // Fetch all metrics for this user, ordered by date
         const { data } = await supabase
           .from('health_metrics')
           .select('*')
           .eq('user_id', user.id)
           .order('date_recorded', { ascending: true });
           
-        if (data) {
-          setMetrics(data);
-        }
+        if (data) setMetrics(data);
       }
       setLoading(false);
     };
-
     fetchRealData();
   }, []);
 
-  // Format data for the chart
   const chartData = metrics.map(m => ({
     date: new Date(m.date_recorded).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
     homa: m.homa_ir,
     insulin: m.fasting_insulin
   }));
 
-  // Get the most recently logged data
   const latest = metrics.length > 0 ? metrics[metrics.length - 1] : null;
+  
+  // Calculate Waist-to-Hip Ratio
+  const whr = (latest?.waist_circumference && latest?.hips) 
+    ? (latest.waist_circumference / latest.hips).toFixed(2) 
+    : null;
 
   if (loading) {
     return (
@@ -76,15 +75,21 @@ export default function MemberDashboard() {
         <LogMetricsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
         {/* Clinical Highlight Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600"><Activity size={24}/></div>
             </div>
             <h3 className="text-slate-500 font-medium mb-1">HOMA-IR Score</h3>
-            <p className="text-4xl font-bold text-slate-900">
-              {latest?.homa_ir || '--'}
-            </p>
+            <p className="text-4xl font-bold text-slate-900">{latest?.homa_ir || '--'}</p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-2 bg-purple-50 rounded-lg text-purple-600"><Scale size={24}/></div>
+            </div>
+            <h3 className="text-slate-500 font-medium mb-1">Waist/Hip Ratio</h3>
+            <p className="text-4xl font-bold text-slate-900">{whr || '--'}</p>
           </div>
 
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
@@ -92,9 +97,7 @@ export default function MemberDashboard() {
               <div className="p-2 bg-blue-50 rounded-lg text-blue-600"><Droplet size={24}/></div>
             </div>
             <h3 className="text-slate-500 font-medium mb-1">Fasting Insulin</h3>
-            <p className="text-4xl font-bold text-slate-900">
-              {latest?.fasting_insulin || '--'} <span className="text-lg font-normal text-slate-400">mIU/L</span>
-            </p>
+            <p className="text-4xl font-bold text-slate-900">{latest?.fasting_insulin || '--'} <span className="text-sm text-slate-400">mIU/L</span></p>
           </div>
 
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
@@ -102,9 +105,7 @@ export default function MemberDashboard() {
               <div className="p-2 bg-rose-50 rounded-lg text-rose-600"><Heart size={24}/></div>
             </div>
             <h3 className="text-slate-500 font-medium mb-1">Fasting Glucose</h3>
-            <p className="text-4xl font-bold text-slate-900">
-               {latest?.fasting_glucose || '--'} <span className="text-lg font-normal text-slate-400">mg/dL</span>
-            </p>
+            <p className="text-4xl font-bold text-slate-900">{latest?.fasting_glucose || '--'} <span className="text-sm text-slate-400">mg/dL</span></p>
           </div>
         </div>
 
@@ -112,8 +113,6 @@ export default function MemberDashboard() {
         <div className="mb-8">
           <h3 className="text-xl font-bold text-slate-900 mb-4">Latest Physical Activity</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Steps */}
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-orange-50 text-orange-600 rounded-lg"><Footprints size={20}/></div>
@@ -124,7 +123,6 @@ export default function MemberDashboard() {
               </div>
             </div>
 
-            {/* Active Minutes */}
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-blue-50 text-blue-600 rounded-lg"><Timer size={20}/></div>
@@ -136,7 +134,6 @@ export default function MemberDashboard() {
               </div>
             </div>
 
-            {/* Energy Burned */}
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
               <div className="flex items-center gap-3 mb-2">
                 <div className="p-2 bg-rose-50 text-rose-600 rounded-lg"><Flame size={20}/></div>
@@ -147,7 +144,6 @@ export default function MemberDashboard() {
                 <span className="text-sm text-slate-400 mb-1">kcal</span>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -178,6 +174,9 @@ export default function MemberDashboard() {
           </div>
         </div>
       </main>
+    </div>
+  );
+}
     </div>
   );
 }
