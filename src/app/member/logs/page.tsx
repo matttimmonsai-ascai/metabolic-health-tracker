@@ -40,12 +40,12 @@ export default function MyLogs() {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex flex-col md:flex-row min-h-screen bg-slate-50">
       <Sidebar role="member" />
       
-      <main className="flex-1 p-8 lg:p-12 overflow-y-auto">
-        <header className="mb-10">
-          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">My Historical Logs</h2>
+      <main className="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto w-full">
+        <header className="mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">My Historical Logs</h2>
           <p className="text-slate-500 mt-1">A complete record of your metabolic health journey.</p>
         </header>
 

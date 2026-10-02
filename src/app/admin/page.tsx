@@ -135,17 +135,17 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex flex-col md:flex-row min-h-screen bg-slate-50">
       <Sidebar role="admin" />
       
-      <main className="flex-1 p-8 lg:p-12 overflow-y-auto">
-        <header className="mb-10">
-          <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Community Overview</h2>
+      <main className="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto w-full">
+        <header className="mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">Community Overview</h2>
           <p className="text-slate-500 mt-1">Monitor the metabolic health of your Skool community.</p>
         </header>
 
         {/* Top KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-8">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
             <div className="p-4 bg-blue-50 text-blue-600 rounded-full"><Users size={28}/></div>
             <div>
@@ -173,11 +173,12 @@ export default function AdminDashboard() {
 
         {/* Member Data Table */}
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-          <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+          <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <h3 className="text-xl font-bold text-slate-900">Member Health Logs</h3>
           </div>
           
-          <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse min-w-[800px] whitespace-nowrap">
             <thead>
               <tr className="bg-slate-50 text-slate-500 text-sm font-medium border-b border-slate-100">
                 <th className="py-4 px-6">Member ID / Contact</th>

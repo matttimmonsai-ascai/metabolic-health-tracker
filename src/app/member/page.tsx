@@ -54,20 +54,20 @@ export default function MemberDashboard() {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-50">
+    <div className="flex flex-col md:flex-row min-h-screen bg-slate-50">
       <Sidebar role="member" />
       
-      <main className="flex-1 p-8 lg:p-12 overflow-y-auto">
-        <header className="flex justify-between items-end mb-10">
+      <main className="flex-1 p-4 md:p-8 lg:p-12 overflow-y-auto w-full">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-slate-900 tracking-tight">Your Progress</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">Your Progress</h2>
             <p className="text-slate-500 mt-1">
               {metrics.length > 0 ? `You have logged ${metrics.length} entries.` : 'Welcome! Log your first metrics to get started.'}
             </p>
           </div>
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-semibold shadow-sm shadow-blue-200 transition-all"
+            className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 md:py-2.5 rounded-xl md:rounded-full font-semibold shadow-sm shadow-blue-200 transition-all"
           >
             + Log Today's Metrics
           </button>
