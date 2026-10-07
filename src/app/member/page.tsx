@@ -9,7 +9,7 @@ import { createClient } from '@/utils/supabase/client';
 
 export default function MemberDashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [metrics, setMetrics] = useState<any[]>([]);
+  const [metrics, setMetrics] = useState<any>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -69,14 +69,14 @@ export default function MemberDashboard() {
             onClick={() => setIsModalOpen(true)}
             className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 md:py-2.5 rounded-xl md:rounded-full font-semibold shadow-sm shadow-blue-200 transition-all"
           >
-            + Log Today's Metrics
+            + Log Today&apos;s Metrics
           </button>
         </header>
 
         <LogMetricsModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
         {/* Clinical Highlight Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
             <div className="flex items-center justify-between mb-4">
               <div className="p-2 bg-indigo-50 rounded-lg text-indigo-600"><Activity size={24}/></div>
@@ -89,11 +89,21 @@ export default function MemberDashboard() {
 
           <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
             <div className="flex items-center justify-between mb-4">
+              <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600"><Activity size={24}/></div>
+            </div>
+            <h3 className="text-slate-500 font-medium mb-1">TG/HDL Ratio</h3>
+            <p className="text-4xl font-bold text-slate-900">
+              {(latest?.triglycerides && latest?.hdl) ? (latest.triglycerides / latest.hdl).toFixed(2) : '--'}
+            </p>
+          </div>
+
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+            <div className="flex items-center justify-between mb-4">
               <div className="p-2 bg-blue-50 rounded-lg text-blue-600"><Droplet size={24}/></div>
             </div>
             <h3 className="text-slate-500 font-medium mb-1">Fasting Insulin</h3>
-            <p className="text-4xl font-bold text-slate-900">
-              {latest?.fasting_insulin || '--'} <span className="text-lg font-normal text-slate-400">mIU/L</span>
+            <p className="text-3xl font-bold text-slate-900">
+              {latest?.fasting_insulin || '--'} <span className="text-base font-normal text-slate-400">mIU/L</span>
             </p>
           </div>
 
@@ -102,8 +112,8 @@ export default function MemberDashboard() {
               <div className="p-2 bg-rose-50 rounded-lg text-rose-600"><Heart size={24}/></div>
             </div>
             <h3 className="text-slate-500 font-medium mb-1">Fasting Glucose</h3>
-            <p className="text-4xl font-bold text-slate-900">
-               {latest?.fasting_glucose || '--'} <span className="text-lg font-normal text-slate-400">mg/dL</span>
+            <p className="text-3xl font-bold text-slate-900">
+               {latest?.fasting_glucose || '--'} <span className="text-base font-normal text-slate-400">mg/dL</span>
             </p>
           </div>
         </div>

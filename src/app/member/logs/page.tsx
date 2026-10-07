@@ -60,9 +60,12 @@ export default function MyLogs() {
               <thead>
                 <tr className="bg-slate-50 text-slate-500 text-sm font-medium border-b border-slate-100">
                   <th className="py-4 px-6">Date</th>
-                  <th className="py-4 px-6">Fasting Insulin</th>
-                  <th className="py-4 px-6">Fasting Glucose</th>
+                  <th className="py-4 px-6">Insulin</th>
+                  <th className="py-4 px-6">Glucose</th>
                   <th className="py-4 px-6 font-bold text-blue-600">HOMA-IR</th>
+                  <th className="py-4 px-6">TG</th>
+                  <th className="py-4 px-6">HDL</th>
+                  <th className="py-4 px-6 font-bold text-blue-600">TG/HDL</th>
                   <th className="py-4 px-6">Waist</th>
                   <th className="py-4 px-6">Abdomen</th>
                   <th className="py-4 px-6">Hips</th>
@@ -73,16 +76,16 @@ export default function MyLogs() {
               <tbody>
                 {logs.length === 0 && (
                   <tr>
-                    <td colSpan={9} className="py-8 text-center text-slate-500">No logs recorded yet.</td>
+                    <td colSpan={12} className="py-8 text-center text-slate-500">No logs recorded yet.</td>
                   </tr>
                 )}
                 {logs.map((log) => (
                   <tr key={log.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
                     <td className="py-4 px-6 font-medium text-slate-900">
-                      {new Date(log.date_recorded).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'})}
+                      {new Date(log.date_recorded).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric'})}
                     </td>
-                    <td className="py-4 px-6 text-slate-600">{log.fasting_insulin || '--'} mIU/L</td>
-                    <td className="py-4 px-6 text-slate-600">{log.fasting_glucose || '--'} mg/dL</td>
+                    <td className="py-4 px-6 text-slate-600">{log.fasting_insulin || '--'}</td>
+                    <td className="py-4 px-6 text-slate-600">{log.fasting_glucose || '--'}</td>
                     <td className="py-4 px-6 font-bold text-slate-800">
                       <span className={`px-2 py-1 rounded-md ${
                         !log.homa_ir ? '' :
@@ -92,6 +95,11 @@ export default function MyLogs() {
                       }`}>
                         {log.homa_ir || '--'}
                       </span>
+                    </td>
+                    <td className="py-4 px-6 text-slate-600">{log.triglycerides || '--'}</td>
+                    <td className="py-4 px-6 text-slate-600">{log.hdl || '--'}</td>
+                    <td className="py-4 px-6 font-bold text-slate-800">
+                      {log.triglycerides && log.hdl ? (log.triglycerides / log.hdl).toFixed(2) : '--'}
                     </td>
                     <td className="py-4 px-6 text-slate-600">{log.waist_circumference ? `${log.waist_circumference}"` : '--'}</td>
                     <td className="py-4 px-6 text-slate-600">{log.abdomen ? `${log.abdomen}"` : '--'}</td>

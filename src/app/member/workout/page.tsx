@@ -55,7 +55,7 @@ export default function WorkoutPage() {
       if (!response.ok) throw new Error(data.error || 'Failed to generate workout');
       
       setWorkoutPlan(data.workout);
-    } catch (error: any) {
+    } catch (error: unknown) {
       alert("Error: " + error.message);
     } finally {
       setLoading(false);

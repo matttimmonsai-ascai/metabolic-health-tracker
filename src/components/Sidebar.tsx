@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Activity, Settings, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, Activity, Settings, LogOut, Menu, X, Dumbbell } from 'lucide-react';
 import { createClient } from '@/utils/supabase/client';
 
 export default function Sidebar({ role = 'member' }: { role?: 'member' | 'admin' }) {
@@ -13,6 +13,7 @@ export default function Sidebar({ role = 'member' }: { role?: 'member' | 'admin'
   const memberLinks = [
     { name: 'Dashboard', href: '/member', icon: LayoutDashboard },
     { name: 'My Logs', href: '/member/logs', icon: Activity },
+    { name: 'My Workout', href: '/member/workout', icon: Dumbbell },
     { name: 'Settings', href: '/member/settings', icon: Settings }
   ];
 
