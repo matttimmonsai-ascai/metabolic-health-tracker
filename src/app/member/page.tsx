@@ -36,7 +36,7 @@ export default function MemberDashboard() {
   }, []);
 
   // Format data for the chart
-  const chartData = metrics.map(m => ({
+  const chartData = metrics.map((m: any) => ({
     date: new Date(m.date_recorded).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
     homa: m.homa_ir,
     insulin: m.fasting_insulin

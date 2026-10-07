@@ -49,7 +49,7 @@ export default function SettingsPage() {
 
       if (error) throw error;
       alert("Profile saved successfully!");
-    } catch (error: unknown) {
+    } catch (error: any) {
       alert("Error saving profile: " + error.message);
     } finally {
       setLoading(false);

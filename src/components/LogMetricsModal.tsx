@@ -71,7 +71,7 @@ export default function LogMetricsModal({ isOpen, onClose }: LogMetricsModalProp
       // In a real app, we would refresh the data on the page here
       window.location.reload(); 
       
-    } catch (error: unknown) {
+    } catch (error: any) {
       alert("Error saving data: " + error.message);
     } finally {
       setLoading(false);
