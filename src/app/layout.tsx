@@ -13,11 +13,23 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Metabolic Health Tracker",
-  description: "Track and trend your metabolic syndrome metrics, including HOMA-IR, Fasting Insulin, and daily physical activity.",
+  title: "Metabolic Health Tracker | HOMA-IR, TG:HDL Ratio & Insulin Resistance",
+  description: "Track and trend your metabolic syndrome biomarkers including HOMA-IR, Fasting Insulin, Fasting Glucose, and Triglyceride-to-HDL ratio, plus AI-customized resistance workouts.",
+  keywords: [
+    "Metabolic Health Tracker",
+    "HOMA-IR calculator",
+    "Triglyceride to HDL ratio calculator",
+    "insulin resistance tracker",
+    "reverse metabolic syndrome",
+    "fasting insulin tracker",
+  ],
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html
       lang="en"
